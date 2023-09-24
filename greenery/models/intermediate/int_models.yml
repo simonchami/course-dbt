@@ -1,0 +1,74 @@
+version: 2
+
+models:
+
+  - name: int_orders
+    description: Information about the orders and shipping efficiency
+    columns:
+      - name: order_id
+        description: Unique ID for order
+        test:
+          - unique
+          - not_null
+      - name: promo_id
+        description: Unique ID for promo
+        test:
+          - unique
+          - not_null
+      - name: user_id
+        description: Unique ID for user
+        test:
+          - unique
+          - not_null
+      - name: address_id
+        description: Unique ID for user address
+        test:
+          - unique
+          - not_null
+      - name: order_cost
+        description: Total cost for order ID
+      - name: created_at
+        description: Date when the order was created
+      - name: shipping_cost
+        description: Cost of shipping
+      - name: order_total
+        description: Total order value
+      - name: tracking_id
+        description: Tracking ID for order shipment
+      - name: shipping_service
+        description: Shipping service selected for the order
+      - name: estimated_delivery_at
+        description: Estimated time and date for delivery
+      - name: delivered_at
+        description: Date and time when the order was delivered
+      - name: days_to_deliver
+        description: Number of days it took to deliver the order
+      - name: delivered_within_estimated_date
+        description: True if the order was already delivered and within the estimated date
+      - name: has_promo
+        description: True if the order has any promotion
+      - name: order_status
+        description: Order status
+
+  - name: int_events
+    description: Coding of the event type to analyze funnel
+    columns: 
+      - name: event_id
+        description: Unique ID for event
+        test: 
+          - unique
+          - not_null
+      - name: session_id
+        description: Unique ID for session
+        test: 
+          - unique
+          - not_null
+      - name: user_id
+        description: Unique ID for user
+        test: 
+          - unique
+          - not_null
+      - name: event_type_code
+        description: Numberical coding to describe the type of event from 1 to 4
+      - name: created_at
+        description: Date and time when the event occurred

@@ -1,0 +1,54 @@
+version: 2
+
+models:
+
+  - name: fact_order_users
+    description: Information about the quantity of orders made by each user
+    columns:
+      - name: user_id
+        description: Unique ID for user
+        test:
+          - unique
+          - not_null
+      - name: number_of_orders
+        description: Number of orders made by the user
+      - name: number_of_promo_orders
+        description: Number of orders with a promo made by the user
+      - name: number_of_delivered_orders
+        description: Number of delivered orders made by the user
+      - name: number_of_orders_delivered_in_time
+        description: Number of orders made by the user that were deliered in time       
+      - name: avg_days_to_deliver
+        description: Average number of days to deliver the user's orders
+      - name: total_shipping_cost
+        description: Total cost of shipping paid by the user
+      - name: total_order_cost
+        description: Total order cost paid by the user
+
+  - name: fact_page_views
+    description: Session information with maximum level reached in the funnel
+    columns: 
+      - name: session_id
+        description: Unique ID for session
+        test: 
+          - unique
+          - not_null
+      - name: user_id
+        description: Unique ID for user
+        test: 
+          - unique
+          - not_null
+      - name: session_final_outcome
+        description: Final outcome of the session
+      - name: session_created_at
+        description: Date and time when the session was created
+      - name: session_ended_at
+        description: Date and time when the session was ended
+      - name: number_of_page_views
+        description: number of page views for the session
+      - name: number_of_add_to_cart
+        description: number of times the user added a product to the cart for that session
+      - name: number_of_checkout
+        description: number of times the session went to number_of_checkout
+      - name: number_of_packages_shipped
+        description: number of packages shipped
