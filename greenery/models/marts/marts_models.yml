@@ -38,17 +38,62 @@ models:
         test: 
           - unique
           - not_null
+      - name: session_final_outcome_code
+        description: Code that describes the final outcome of the session    
       - name: session_final_outcome
         description: Final outcome of the session
       - name: session_created_at
         description: Date and time when the session was created
       - name: session_ended_at
         description: Date and time when the session was ended
-      - name: number_of_page_views
+      - name: page_views
         description: number of page views for the session
+      - name: add_to_carts
+        description: number of times the user added a product to the cart for that session
+      - name: checkouts
+        description: number of times the session went to number_of_checkout
+      - name: packages_shippeds
+        description: number of packages shipped
+
+  - name: fact_product_funnel_user
+    description: Product conversion information for user
+    columns: 
+      - name: date
+        description: date of the event
+      - name: user_id
+        description: Unique ID for user
+        test: 
+          - not_null
+      - name: product_id
+        description: Unique ID for product
+        test:
+          - not_null
+      - name: number_of_page_views
+        description: Number of page views
       - name: number_of_add_to_cart
         description: number of times the user added a product to the cart for that session
       - name: number_of_checkout
         description: number of times the session went to number_of_checkout
       - name: number_of_packages_shipped
         description: number of packages shipped
+
+  - name: fact_product_funnel_session
+    description: Product conversion information for session
+    columns: 
+      - name: session_id
+        description: Unique ID for session
+        test: 
+          - not_null
+      - name: product_id
+        description: Unique ID for product
+        test:
+          - not_null
+      - name: number_of_page_views
+        description: Number of page views
+      - name: number_of_add_to_cart
+        description: number of times the user added a product to the cart for that session
+      - name: number_of_checkout
+        description: number of times the session went to number_of_checkout
+      - name: number_of_packages_shipped
+        description: number of packages shipped
+   
