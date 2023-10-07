@@ -13,9 +13,9 @@ stg_order_items as (
     select * from {{ ref('stg_postgres_order_items') }}
 ),
 
-fact_product_funnel_user as (
+fact_product_funnel as (
   select
-    stg_postgres_events.user_id  as user_id,
+    coalesce(stg_postgres_events.product_id, stg_postgres_order_items.product_id) as product_id,
     sum(case when event_type = 'page_view' then 1 else 0 end) as number_of_page_views,
     sum(case when event_type = 'add_to_cart' then 1 else 0 end) as number_of_add_to_cart,
     sum(case when event_type = 'checkout' then 1 else 0 end) as number_of_checkout,
@@ -29,7 +29,7 @@ fact_product_funnel_user as (
 
 
 select 
-  user_id,
+  product_id,
   number_of_page_views,
   number_of_add_to_cart,
   number_of_checkout,
@@ -38,4 +38,4 @@ select
   case when number_of_add_to_cart = 0 then null else (number_of_checkout / number_of_add_to_cart) end as checkout_conversion,
   case when number_of_checkout = 0 then null else (number_of_packages_shipped / number_of_checkout) end as purchase_conversion,
   case when number_of_page_views = 0 then null else (number_of_packages_shipped / number_of_page_views) end as overall_conversion
-from fact_product_funnel_user
+from fact_product_funnel

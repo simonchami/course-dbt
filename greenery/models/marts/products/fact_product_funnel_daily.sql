@@ -13,9 +13,18 @@ stg_order_items as (
     select * from {{ ref('stg_postgres_order_items') }}
 ),
 
-fact_product_funnel_user as (
+session_created_date as (
+  select 
+    session_id,
+    min(created_at) as session_created_date
+  from stg_postgres_events
+  group by 1
+),
+
+fact_product_funnel_daily as (
   select
-    stg_postgres_events.user_id  as user_id,
+    date(session_created_date.session_created_date) as session_created_date,
+    coalesce(stg_postgres_events.product_id, stg_postgres_order_items.product_id) as product_id,
     sum(case when event_type = 'page_view' then 1 else 0 end) as number_of_page_views,
     sum(case when event_type = 'add_to_cart' then 1 else 0 end) as number_of_add_to_cart,
     sum(case when event_type = 'checkout' then 1 else 0 end) as number_of_checkout,
@@ -23,13 +32,16 @@ fact_product_funnel_user as (
   from stg_postgres_events
   left join int_events 
   on stg_postgres_events.session_id = int_events.session_id
+  left join session_created_date
+  on stg_postgres_events.session_id = session_created_date.session_id
   left join stg_postgres_order_items
   on stg_postgres_events.order_id = stg_postgres_order_items.order_id
-  group by 1)
+  group by 1, 2)
 
 
 select 
-  user_id,
+  session_created_date,
+  product_id,
   number_of_page_views,
   number_of_add_to_cart,
   number_of_checkout,
@@ -38,4 +50,4 @@ select
   case when number_of_add_to_cart = 0 then null else (number_of_checkout / number_of_add_to_cart) end as checkout_conversion,
   case when number_of_checkout = 0 then null else (number_of_packages_shipped / number_of_checkout) end as purchase_conversion,
   case when number_of_page_views = 0 then null else (number_of_packages_shipped / number_of_page_views) end as overall_conversion
-from fact_product_funnel_user
+from fact_product_funnel_daily

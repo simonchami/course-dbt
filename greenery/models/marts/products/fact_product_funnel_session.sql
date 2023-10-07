@@ -35,5 +35,9 @@ select
   number_of_page_views,
   number_of_add_to_cart,
   number_of_checkout,
-  number_of_packages_shipped
+  number_of_packages_shipped,
+  case when number_of_page_views = 0 then null else (number_of_add_to_cart / number_of_page_views) end as add_to_cart_conversion,
+  case when number_of_add_to_cart = 0 then null else (number_of_checkout / number_of_add_to_cart) end as checkout_conversion,
+  case when number_of_checkout = 0 then null else (number_of_packages_shipped / number_of_checkout) end as purchase_conversion,
+  case when number_of_page_views = 0 then null else (number_of_packages_shipped / number_of_page_views) end as overall_conversion
 from fact_product_funnel_session
